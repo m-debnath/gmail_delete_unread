@@ -1,0 +1,5 @@
+google-api-python-client==2.52.*
+google-auth-httplib2==0.1.*
+google-auth-oauthlib==0.5.*
+PyYAML==6.0.*
+types-PyYAML==6.0.*
