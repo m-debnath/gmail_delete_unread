@@ -1,3 +1,5 @@
+#! .\venv\Scripts\python.exe
+
 from __future__ import annotations, print_function
 
 from googleapiclient.discovery import build
