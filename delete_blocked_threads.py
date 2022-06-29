@@ -14,7 +14,7 @@ def get_black_list() -> list[str] | None:
     return data["BLACK_LIST"]
 
 
-def show_chatty_threads():
+def delete_blocked_threads() -> int:
     """Display threads with long conversations(>= 3 messages)
     Return: None
 
@@ -24,6 +24,7 @@ def show_chatty_threads():
     """
     creds = authorize()
     black_list = get_black_list()
+    counter = 0
 
     try:
         # create gmail api client
@@ -34,15 +35,20 @@ def show_chatty_threads():
             tdata = service.users().threads().get(userId="me", id=thread["id"]).execute()
             msg = tdata["messages"][0]["payload"]
             headers = {header["name"]: header["value"] for header in msg["headers"]}
-            subject = headers["Subject"]
             from_address = headers["From"]
-            for each in black_list:
-                if each.lower() in from_address.lower():
-                    print(f"{subject} from {from_address}")
+            if black_list:
+                for each in black_list:
+                    if each.lower() in from_address.lower():
+                        service.users().threads().trash(userId="me", id=thread["id"]).execute()
+                        counter += 1
+                        break
+        print(f"{counter} conversation(s) moved to trash.")
+        return 0
 
     except HttpError as error:
         print(f"An error occurred: {error}")
+        return 1
 
 
 if __name__ == "__main__":
-    show_chatty_threads()
+    exit(delete_blocked_threads())
