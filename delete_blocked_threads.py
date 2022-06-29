@@ -8,22 +8,30 @@ from gmail_auth import authorize
 
 
 def get_black_list() -> list[str] | None:
+    """Reads the black list.
+    Return: list of blocked phrases or None
+    """
     data = None
-    with open("blacklist.yaml", "r") as stream:
-        data = load(stream, Loader=Loader)
-    return data["BLACK_LIST"]
+    try:
+        with open("blacklist.yaml", "r") as stream:
+            data = load(stream, Loader=Loader)
+        return data["BLACK_LIST"]
+    except FileNotFoundError:
+        print("No blacklist configured. Please create a file called blacklist.yaml to continue.")
+        return None
+    except KeyError:
+        print("blacklist.yaml should have BLACK_LIST root element.")
+        return None
 
 
 def delete_blocked_threads() -> int:
-    """Display threads with long conversations(>= 3 messages)
-    Return: None
-
-    Load pre-authorized user credentials from the environment.
-    TODO(developer) - See https://developers.google.com/identity
-    for guides on implementing OAuth2 for the application.
+    """Delete threads with From address matching a black list.
+    Return: int
     """
     creds = authorize()
     black_list = get_black_list()
+    if not black_list:
+        return 1
     counter = 0
 
     try:
