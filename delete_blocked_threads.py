@@ -33,6 +33,7 @@ def delete_blocked_threads() -> int:
     creds = authorize()
     black_list = get_black_list()
     if not black_list:
+        input("Press Enter to continue...")
         return 1
     counter = 0
 
@@ -53,10 +54,12 @@ def delete_blocked_threads() -> int:
                         counter += 1
                         break
         print(f"{counter} conversation(s) moved to trash.")
+        input("Press Enter to continue...")
         return 0
 
     except HttpError as error:
         print(f"An error occurred: {error}")
+        input("Press Enter to continue...")
         return 1
 
 
