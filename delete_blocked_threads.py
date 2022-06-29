@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function, annotations
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
