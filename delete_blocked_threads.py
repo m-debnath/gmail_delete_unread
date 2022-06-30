@@ -36,7 +36,7 @@ def check_black_list(row) -> int:
     global _black_list
     if _black_list:
         for each in _black_list:
-            if each.lower() in row["From"].lower():
+            if each.lower() in row["From"].lower() or each.lower() in row["Text"].lower():
                 return 1
     return 0
 
