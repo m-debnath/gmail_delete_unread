@@ -32,7 +32,7 @@ def get_black_list() -> list[str] | None:
         return None
 
 
-def check_black_list(row) -> int:
+def check_if_spam(row) -> int:
     global _black_list
     if _black_list:
         for each in _black_list:
@@ -68,7 +68,7 @@ def delete_blocked_threads() -> int:
             msg = tdata["messages"][0]["payload"]
             headers = {header["name"]: header["value"] for header in msg["headers"]}
             emails.loc[len(emails)] = [thread["id"], headers["From"], headers["Subject"], 0]
-        emails["Spam"] = emails.apply(lambda row: check_black_list(row), axis=1)
+        emails["Spam"] = emails.apply(lambda row: check_if_spam(row), axis=1)
         spam_emails: DataFrame = emails[emails["Spam"] == 1]
         spam_emails.apply(lambda row: delete_email_thread(row), axis=1)
         print(f"{spam_emails.shape[0]} conversation(s) moved to trash.")
